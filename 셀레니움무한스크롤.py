@@ -9,6 +9,8 @@ from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import time
+import csv
+
 
 
 
@@ -58,13 +60,23 @@ while True:
         break
     
     before_h = after_h
-    
+
+f = open(r"C:\Users\user\논병아리\crawling_practice\data.csv","w",encoding="CP949",newline="")
+csvwriter = csv.writer(f)
+
+
 items = driver.find_elements(By.CSS_SELECTOR,".basicList_item__0T9JD")
 for item in items:
     name = item.find_element(By.CSS_SELECTOR, ".basicList_title__VfX3c").text
-    price = item.find_element(By.CSS_SELECTOR,".price_num__S2p_v").text
-    link = item.find_element(By.CSS_SELECTOR,".basicList_price_area__K7DDT > a").get_attribute("href")
+    try:
+        price = item.find_element(By.CSS_SELECTOR,".price_num__S2p_v").text
+    except:
+        price = "판매중단"
+    link = item.find_element(By.CSS_SELECTOR,".basicList_link__JLQJf").get_attribute("href")
     print(name,price,link)
+    csvwriter.writerow([name,price,link])
+    
+f.close()
     
     
 
